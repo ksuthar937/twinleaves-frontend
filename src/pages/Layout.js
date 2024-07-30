@@ -1,10 +1,11 @@
 import React from "react";
 import { Outlet } from "react-router";
+import Navbar from "../components/Navbar";
 
 const Layout = () => {
   return (
     <main>
-      <h1>Twinleaves</h1>
+      <Navbar />
       <Outlet />
     </main>
   );

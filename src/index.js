@@ -12,6 +12,7 @@ import {
 import Home from "./pages/Home";
 import ProductDetails from "./pages/ProductDetails";
 import Layout from "./pages/Layout";
+import { ProductsProvider } from "./context/ProductsContext";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -25,6 +26,8 @@ const router = createBrowserRouter(
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <ProductsProvider>
+      <RouterProvider router={router} />
+    </ProductsProvider>
   </React.StrictMode>
 );
