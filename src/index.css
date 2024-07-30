@@ -1,0 +1,58 @@
+:root {
+  /* Global variables to be defined here */
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-primary-light: #84b7fe;
+  --color-secondary-light: #9c7ffe;
+  --color-primary-dark: #3bb6fe;
+  --color-secondary-dark: #a666fe;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+* {
+  margin: 0;
+}
+html,
+body {
+  height: 100%;
+  background-color: var(--color-white);
+  color: var(--color-black);
+  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+    "Lucida Sans", Arial, sans-serif;
+}
+body {
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-align: center;
+}
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+#root,
+#__next {
+  isolation: isolate;
+}
