@@ -4,9 +4,10 @@ import Error from "../components/Error";
 import { Box } from "@mui/material";
 import { useProucts } from "../context/ProductsContext";
 import { DataGrid } from "@mui/x-data-grid";
+import { updateProductImageUrl } from "../utils/helper";
 
 const Home = () => {
-  const { state } = useProucts();
+  const { state, dispatch } = useProucts();
 
   const columns = [
     { field: "sku_code", headerName: "ID", width: 90 },
@@ -17,7 +18,7 @@ const Home = () => {
       width: 100,
       renderCell: (params) => (
         <img
-          src={params.row.images.front}
+          src={updateProductImageUrl(params.row.images.front)}
           alt={params.row.name}
           width="50"
           height="50"
@@ -25,13 +26,7 @@ const Home = () => {
       ),
     },
     { field: "main_category", headerName: "Category", width: 250 },
-    {
-      field: "price",
-      headerName: "Price",
-      type: "number",
-      width: 110,
-      // valueGetter: (params) => params.row.mrp?.mrp,
-    },
+    { field: "mrp.mrp", headerName: "Price", type: "number", width: 110 },
     {
       field: "details",
       headerName: "Details",
@@ -42,18 +37,26 @@ const Home = () => {
     },
   ];
 
-  return (
-    <Box sx={{ height: 600, width: "100%" }}>
-      {state.isLoading && <Loader />}
-      {state.error && <Error />}
+  if (state.error) {
+    return <Error />;
+  }
 
-      <DataGrid
-        rows={state.products}
-        columns={columns}
-        pageSize={5}
-        rowCount={state.products.length}
-        getRowId={(row) => row.sku_code + Math.random()}
-      />
+  return (
+    <Box sx={{ height: 800, width: "100%" }}>
+      {state.isLoading ? (
+        <Loader />
+      ) : (
+        <DataGrid
+          rows={state.products}
+          columns={columns}
+          paginationMode="server"
+          rowCount={state.totalItems}
+          getRowId={(row) => row.sku_code + Math.random()}
+          onPageChange={(newPage) =>
+            dispatch({ type: "products/page", payload: newPage + 1 })
+          }
+        />
+      )}
     </Box>
   );
 };

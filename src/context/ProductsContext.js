@@ -8,6 +8,9 @@ const intialState = {
   error: null,
   products: [],
   searchQuery: "",
+  page: 1,
+  totalItems: 0,
+  productDetails: [],
 };
 
 function reducer(state, action) {
@@ -17,9 +20,21 @@ function reducer(state, action) {
     case "products/error":
       return { ...state, error: action.payload };
     case "products/loaded":
-      return { ...state, isLoading: false, products: action.payload };
+      return {
+        ...state,
+        isLoading: false,
+        products: action.payload.products,
+        totalItems: Number(action.payload.totalResults),
+      };
+    case "products/page":
+      return {
+        ...state,
+        page: action.payload,
+      };
     case "search/product":
       return { ...state, searchQuery: action.payload };
+    case "details/product":
+      return { ...state, productDetails: action.payload };
     default:
       throw new Error("Unknown case");
   }
@@ -35,15 +50,18 @@ function ProductsProvider({ children }) {
 
       try {
         const products = await axios.get(
-          "https://catalog-management-system-dev-ak3ogf6zea-uc.a.run.app/cms/products"
+          "https://catalog-management-system-dev-ak3ogf6zea-uc.a.run.app/cms/products",
+          {
+            params: { page: state.page },
+          }
         );
-        dispatch({ type: "products/loaded", payload: products.data.products });
+        dispatch({ type: "products/loaded", payload: products.data });
       } catch (error) {
         dispatch({ type: "products/error", payload: error.message });
       }
     }
     fetchData();
-  }, []);
+  }, [state.page]);
 
   return (
     <ProductsContext.Provider value={{ state, dispatch }}>
