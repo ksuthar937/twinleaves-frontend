@@ -8,7 +8,7 @@ const intialState = {
   error: null,
   products: [],
   searchQuery: "",
-  page: 1,
+  page: 0,
   totalItems: 0,
   productDetails: [],
   filteredProducts: [],
@@ -34,6 +34,7 @@ function reducer(state, action) {
         categories: categories,
       };
     case "products/page":
+      console.log(action.payload);
       return {
         ...state,
         page: action.payload,
@@ -66,7 +67,7 @@ function ProductsProvider({ children }) {
         const products = await axios.get(
           "https://catalog-management-system-dev-ak3ogf6zea-uc.a.run.app/cms/products",
           {
-            params: { page: state.page },
+            params: { page: state.page + 1 },
           }
         );
         dispatch({ type: "products/loaded", payload: products.data });

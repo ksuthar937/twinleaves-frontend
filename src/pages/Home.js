@@ -59,11 +59,13 @@ const Home = () => {
               : state.products
           }
           columns={columns}
+          pagination
+          rowsPerPageOptions={[20]}
           paginationMode="server"
           rowCount={state.totalItems}
           getRowId={(row) => row.sku_code}
           onPageChange={(newPage) =>
-            dispatch({ type: "products/page", payload: newPage + 1 })
+            dispatch({ type: "products/page", payload: newPage })
           }
         />
       </Box>

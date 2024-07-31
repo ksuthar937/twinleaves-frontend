@@ -23,7 +23,7 @@ const FormInput = () => {
             })
           }
         >
-          {state.categories.map((category, index) => (
+          {state.categories.map((category) => (
             <MenuItem key={category} value={category}>
               {category}
             </MenuItem>
