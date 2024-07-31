@@ -11,6 +11,7 @@ const intialState = {
   page: 1,
   totalItems: 0,
   productDetails: [],
+  filteredProducts: [],
 };
 
 function reducer(state, action) {
@@ -33,6 +34,8 @@ function reducer(state, action) {
       };
     case "search/product":
       return { ...state, searchQuery: action.payload };
+    case "filter/product":
+      return { ...state, filteredProducts: action.payload };
     case "details/product":
       return { ...state, productDetails: action.payload };
     default:
@@ -62,6 +65,45 @@ function ProductsProvider({ children }) {
     }
     fetchData();
   }, [state.page]);
+
+  const applyFiltersAndSorting = (state) => {
+    console.log(state);
+    let filteredProducts = state?.products;
+    // Apply search filter
+    if (state.searchQuery) {
+      filteredProducts = filteredProducts.filter((product) =>
+        product.name.toLowerCase().includes(state.searchQuery.toLowerCase())
+      );
+      dispatch({ type: "filter/product", payload: filteredProducts });
+    }
+
+    // Apply category filter
+    // if (category) {
+    //     filteredProducts = filteredProducts.filter(product =>
+    //         product.main_category === category
+    //     );
+    // }
+
+    // Apply sorting
+    // if (sortModel.length > 0) {
+    //     const sortField = sortModel[0].field;
+    //     const sortDirection = sortModel[0].sort === 'asc' ? 1 : -1;
+    //     filteredProducts = filteredProducts.sort((a, b) => {
+    //         if (a.mrp?.mrp < b.mrp?.mrp) return -1 * sortDirection;
+    //         if (a.mrp?.mrp > b.mrp?.mrp) return 1 * sortDirection;
+    //         return 0;
+    //     });
+    // }
+
+    // // Apply pagination
+    // const start = (page - 1) * pageSize;
+    // const end = start + pageSize;
+    // setDisplayProducts(filteredProducts.slice(start, end));
+  };
+
+  useEffect(() => {
+    applyFiltersAndSorting(state);
+  }, [state]);
 
   return (
     <ProductsContext.Provider value={{ state, dispatch }}>

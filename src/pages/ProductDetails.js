@@ -6,9 +6,10 @@ import { useParams } from "react-router";
 import { ShoppingBasket } from "@mui/icons-material";
 
 const ProductDetails = () => {
-  const { state, dispatch } = useProucts();
+  const { state } = useProucts();
 
   const { sku_code } = useParams();
+
   const product = state.products.find(
     (product) => Number(product.sku_code) === Number(sku_code)
   );
@@ -17,7 +18,6 @@ const ProductDetails = () => {
     name = "",
     images = {},
     description = "",
-    brand = "",
     main_category = "",
     mrp = {},
   } = product || {};
@@ -39,7 +39,7 @@ const ProductDetails = () => {
       sx={{
         boxShadow: "0.3em 0.3em 2em rgba(110, 105, 105, 0.4)",
         borderRadius: "0.5em",
-        maxWidth: 400,
+        maxWidth: 900,
       }}
     >
       <Typography variant="h6" component="p" mb={2}>
