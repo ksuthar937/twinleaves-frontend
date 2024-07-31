@@ -12,6 +12,8 @@ const intialState = {
   totalItems: 0,
   productDetails: [],
   filteredProducts: [],
+  categories: [],
+  selectedCategory: "",
 };
 
 function reducer(state, action) {
@@ -21,16 +23,25 @@ function reducer(state, action) {
     case "products/error":
       return { ...state, error: action.payload };
     case "products/loaded":
+      const categories = [
+        ...new Set(action.payload.products.map((item) => item.main_category)),
+      ];
       return {
         ...state,
         isLoading: false,
         products: action.payload.products,
         totalItems: Number(action.payload.totalResults),
+        categories: categories,
       };
     case "products/page":
       return {
         ...state,
         page: action.payload,
+      };
+    case "products/category":
+      return {
+        ...state,
+        selectedCategory: action.payload,
       };
     case "search/product":
       return { ...state, searchQuery: action.payload };
@@ -67,9 +78,8 @@ function ProductsProvider({ children }) {
   }, [state.page]);
 
   const applyFiltersAndSorting = (state) => {
-    console.log(state);
     let filteredProducts = state?.products;
-    // Apply search filter
+
     if (state.searchQuery) {
       filteredProducts = filteredProducts.filter((product) =>
         product.name.toLowerCase().includes(state.searchQuery.toLowerCase())
@@ -77,28 +87,12 @@ function ProductsProvider({ children }) {
       dispatch({ type: "filter/product", payload: filteredProducts });
     }
 
-    // Apply category filter
-    // if (category) {
-    //     filteredProducts = filteredProducts.filter(product =>
-    //         product.main_category === category
-    //     );
-    // }
-
-    // Apply sorting
-    // if (sortModel.length > 0) {
-    //     const sortField = sortModel[0].field;
-    //     const sortDirection = sortModel[0].sort === 'asc' ? 1 : -1;
-    //     filteredProducts = filteredProducts.sort((a, b) => {
-    //         if (a.mrp?.mrp < b.mrp?.mrp) return -1 * sortDirection;
-    //         if (a.mrp?.mrp > b.mrp?.mrp) return 1 * sortDirection;
-    //         return 0;
-    //     });
-    // }
-
-    // // Apply pagination
-    // const start = (page - 1) * pageSize;
-    // const end = start + pageSize;
-    // setDisplayProducts(filteredProducts.slice(start, end));
+    if (state.selectedCategory) {
+      filteredProducts = filteredProducts.filter(
+        (product) => product.main_category === state.selectedCategory
+      );
+      dispatch({ type: "filter/product", payload: filteredProducts });
+    }
   };
 
   useEffect(() => {

@@ -6,6 +6,7 @@ import { useProucts } from "../context/ProductsContext";
 import { DataGrid } from "@mui/x-data-grid";
 import { updateProductImageUrl } from "../utils/helper";
 import { Link } from "react-router-dom";
+import FormInput from "../components/FormInput";
 
 const Home = () => {
   const { state, dispatch } = useProucts();
@@ -46,19 +47,26 @@ const Home = () => {
   }
 
   return (
-    <Box sx={{ height: 800, width: "100%" }}>
-      <DataGrid
-        rows={
-          state.searchQuery.length > 0 ? state.filteredProducts : state.products
-        }
-        columns={columns}
-        paginationMode="server"
-        rowCount={state.totalItems}
-        getRowId={(row) => row.sku_code + Math.random(1)}
-        onPageChange={(newPage) =>
-          dispatch({ type: "products/page", payload: newPage + 1 })
-        }
-      />
+    <Box m={1}>
+      <Box my={3}>
+        <FormInput />
+      </Box>
+      <Box sx={{ height: 800, width: "100%" }}>
+        <DataGrid
+          rows={
+            (state.filteredProducts.length || state.searchQuery.length) > 0
+              ? state.filteredProducts
+              : state.products
+          }
+          columns={columns}
+          paginationMode="server"
+          rowCount={state.totalItems}
+          getRowId={(row) => row.sku_code}
+          onPageChange={(newPage) =>
+            dispatch({ type: "products/page", payload: newPage + 1 })
+          }
+        />
+      </Box>
     </Box>
   );
 };

@@ -11,7 +11,7 @@ const ProductDetails = () => {
   const { sku_code } = useParams();
 
   const product = state.products.find(
-    (product) => Number(product.sku_code) === Number(sku_code)
+    (product) => String(product.sku_code) === String(sku_code)
   );
 
   const {
